@@ -54,7 +54,7 @@ A live version of the interactive dashboard is available at: https://spam.sysnef
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/srynprjl/spam-detection
    cd spam-detection
    ```
 
