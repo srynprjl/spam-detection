@@ -1,76 +1,115 @@
-# Spam Detection System
+# Email Spam Detection System
 
-This project is a Spam Detection System that uses Natural Language Processing (NLP) and machine learning to classify messages as either "Spam" or "Ham" (legitimate). It includes a full pipeline from data preprocessing and exploratory data analysis (EDA) to model training and a web-based interface for real-time testing.
+A complete machine learning pipeline and interactive web interface for classifying emails as either Spam or Ham emails. The system utilizes Natural Language Processing (NLP) techniques and a Hybrid Naive Bayes classifier to achieve high prediction accuracy.
 
----
+## Overview
 
-## What we did
-For the development of this Spam Detection System we first used the dataset of Enron email and linguistic datasets to ensure the model could handle a wide variety of communication styles. During the preprocessing phase, we removed many null values & duplicated values and merge subject and text. 
+This project implements a full lifecycle for spam detection, covering data collection from multiple sources, rigorous preprocessing, feature engineering, and a unique classification approach. The hybrid model combines Multinomial Naive Bayes for word-based analysis and Gaussian Naive Bayes for numerical features, resulting in a balanced and effective prediction system.
 
-To move beyond simple keyword matching, we did feature engineering by calculating metrics like digit ratios and average word lengths, special symbols and URLs. 
+### Core Methodology
+- Hybrid Classifier: Integrates Multinomial Naive Bayes (for text content) and Gaussian Naive Bayes (for engineered numerical features).
+- Feature Engineering: Goes beyond simple keyword matching by analyzing digit ratios, URL presence, lexical diversity, and average word lengths.
+- Real-time Interface: Provides an interactive dashboard for users to test custom messages.
 
-After the preprocessing phase, we implemented a Hybrid Naive Bayes Classifier that combines Multinomial Naive Bayes for text-based word analysis with Gaussian Naive Bayes for calculating the probability of numerical features. This approach allowed the model to achieve an accuracy of approximately 94%.
-
-Finally, we created a web interface using Dash framework, allowing users to input custom messages and receive instant Spam or Ham predictions.
-
----
+## Live Demo
+A live version of the interactive dashboard is available at: https://spam.sysnefo.com
 
 ## Features
-- Text preprocessing and cleaning
-- Tokenization and stopword removal
-- Feature extraction using Bag of Words
-- Classificiation using Naive Bayes
-- Model evaluation with performance metrics
-- Spam prediction for new messages
 
----
+- Data Ingestion: Processes and merges multiple datasets (Enron, Ling-Spam) into a unified format.
+- Preprocessing Pipeline: Automates the removal of null values, duplicates, and performs field merging (Subject + Body).
+- NLP Processing: Handles tokenization, stopword removal, and Bag-of-Words vectorization.
+- Engineered Metrics: Extracts metadata features including:
+  - Digit Ratio: Frequency of numerical digits in the message.
+  - URL Presence: Detection of common web link patterns (http, www, .com).
+  - Lexical Diversity: Ratio of unique words to total word count.
+  - Average Word Length: Statistical measure of message complexity.
+- Evaluation Suite: Comprehensive performance tracking including accuracy metrics (approximately 94%).
+
+## Project Structure
+
+```text
+├── app.py                     # Dash web application and model inference logic
+├── datasets/                  # Source and processed data files
+│   ├── spam_enron.csv         # Enron email dataset source
+│   ├── spam_ling.csv          # Ling-Spam dataset source
+│   ├── spam_dataset.csv       # Final processed dataset used for training
+│   └── spam_test.csv          # Evaluation dataset
+├── notebooks/
+│   ├── EDA & Preprocessing.ipynb # Data cleaning and feature extraction logic
+│   └── SpamDetection.ipynb    # Model training, validation, and export
+├── pyproject.toml             # Project configuration and metadata
+├── requirements.txt           # Python dependency specifications
+└── README.md                  # Project documentation
+```
 
 ## Technologies Used
-- Pandas
-- NumPy
-- Dash
-- Matplotlib 
-- Seaborn
 
----
-## Project Structure
-`EDA & Preprocessing.ipynb`: Handles data loading, cleaning, and feature engineering. It merges multiple datasets (like Enron and Linguist) and extracts features such as digit ratios, symbol counts, and URL presence.
+- Data Analysis: Pandas, NumPy
+- Web Interface: Dash, Plotly
+- Visualization: Matplotlib, Seaborn
+- Development: JupyterLab, Python 3.14+
 
-`SpamDetection.ipynb`: Contains the machine learning logic, including data splitting, model training, and performance evaluation.
+## Installation
 
-`app.py`: A Dash-based web application that allows users to input custom messages and get instant classification results using the trained model.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd spam-detection
+   ```
 
-`spam_dataset.csv`: The primary processed dataset used for training, containing the raw text and engineered features.
+### Option A: Using uv (Recommended)
+`uv` will automatically manage the correct Python version and dependencies for you.
+```bash
+uv sync
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
 
-## Primary Dataset
+### Option B: Using pip
+Ensure you have Python 3.14+ installed on your system.
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-- Enron Spam Dataset
-- Linguist Dataset
-
----
-
+Note: This project is configured for Python 3.14 and above as specified in the project configuration.
 
 ## Usage
-Preprocessing: Run ` EDA & Preprocessing.ipynb` to clean the raw data and generate the spam_dataset.csv file. <br />
-Training: Run `SpamDetection.ipynb` to train the Naive Bayes model and export it as a pickle file <br />
-Dashboard:  Run `python app.py` to open the Dashboard <br />
 
+### 1. Data Processing
+Run the `notebooks/EDA & Preprocessing.ipynb` notebook to clean the raw CSV files in the `datasets` folder and generate the consolidated `spam_dataset.csv`.
 
-Input :
+### 2. Model Training
+Execute the `notebooks/SpamDetection.ipynb` notebook. This process will:
+- Split the data into training and testing sets.
+- Train the Hybrid Naive Bayes components.
+- Export the trained weights and vocabulary to `models/spam_detection.pkl`.
+
+### 3. Running the Dashboard
+Start the interactive web interface by running:
+```bash
+python app.py
 ```
+By default, the application will be accessible at `http://127.0.0.1:8050/`.
+
+## Performance Metrics
+
+The Hybrid Naive Bayes approach achieved an accuracy of approximately 94% on the test dataset. By combining both linguistic patterns (word frequencies) and structural features (digit ratios, URLs), the model maintains robustness across different communication styles found in the Enron and Ling-Spam datasets.
+
+## Example Input/Output
+
+Input:
+```text
 Subject: Re: Q3 Marketing Sync
 Body:
 Hi Sarah,
 I've attached the updated slide deck for tomorrow's meeting. I adjusted the budget projections on slide 4 based on the feedback from the finance team. Let me know if you have any questions before we go live!
 Best,
 Mark
-
 ```
 
 Output:
-
+```text
+Classification: HAM
 ```
-Ham
-```
-
----
